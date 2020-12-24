@@ -23,6 +23,7 @@
     "@polkadot/types": "3.1.1",
     "@polkadot/util": "5.1.1",
     "@polkadot/util-crypto": "5.1.1",
-    "@substrate/txwrapper": "3.10.4"
+    "@substrate/txwrapper": "3.10.4",
+    "deep-object-diff": "^1.1.0"
   }
 }

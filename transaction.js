@@ -4,6 +4,12 @@ const { TRANSACTION_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic'
 const { createSignedTx, createSigningPayload, decode, getRegistry, getTxHash, methods } = require('@substrate/txwrapper');
 const { createMetadata } = require('@substrate/txwrapper/lib/util/metadata');
 
+const ssFormat = 42;
+const chainProperties = {
+    ss58Format: ssFormat,
+    tokenDecimals: 6,
+    tokenSymbol: 'DCK',
+};
 const registryDock = {};
 function getRegistryDock(chainName, specName, specVersion, metadata) {
     if (registryDock[specVersion]) {
@@ -20,7 +26,7 @@ function getRegistryDock(chainName, specName, specVersion, metadata) {
 }
 
 class Transaction {
-    constructor(network = 22) {
+    constructor(network = ssFormat) {
         this.network = network
     }
 
@@ -43,17 +49,15 @@ class Transaction {
         } = txData;
 
         const registry = getRegistryDock(chainName, specName, specVersion, metadataRpc);
+        registry.register({ Address: 'AccountId' });
+        registry.register({ LookupSource: 'AccountId' });
         registry.register({ EpochNo: 'u32' });
         registry.register({ SlotNo: 'u64' });
-        registry.register({ Did: '[u8;32]' });
+        registry.register({ Balance: 'u64' });
         registry.setChainProperties(
             registry.createType(
                 'ChainProperties',
-                {
-                    ss58Format: 22,
-                    tokenDecimals: 6,
-                    tokenSymbol: 'DCK',
-                },
+                chainProperties,
             ),
         );
 
@@ -104,11 +108,7 @@ class Transaction {
         registry.setChainProperties(
             registry.createType(
                 'ChainProperties',
-                {
-                    ss58Format: 22,
-                    tokenDecimals: 6,
-                    tokenSymbol: 'DCK',
-                },
+                chainProperties,
             ),
         );
 
@@ -136,11 +136,7 @@ class Transaction {
         registry.setChainProperties(
             registry.createType(
                 'ChainProperties',
-                {
-                    ss58Format: 22,
-                    tokenDecimals: 6,
-                    tokenSymbol: 'DCK',
-                },
+                chainProperties,
             ),
         );
 
