@@ -18,12 +18,14 @@
   },
   "homepage": "https://github.com/EvanXzj/dock-demo#readme",
   "dependencies": {
-    "@docknetwork/sdk": "0.3.10",
     "@polkadot/api": "3.1.1",
     "@polkadot/types": "3.1.1",
     "@polkadot/util": "5.1.1",
     "@polkadot/util-crypto": "5.1.1",
     "@substrate/txwrapper": "3.10.4",
     "deep-object-diff": "^1.1.0"
+  },
+  "resolutions": {
+    "@polkadot/api": "3.1.1"
   }
 }

@@ -1,12 +1,15 @@
 const { Keyring } = require('@polkadot/api');
+const { cryptoWaitReady } = require('@polkadot/util-crypto');
 const { hexToU8a } = require('@polkadot/util');
-const { TRANSACTION_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic');
+const { TypeRegistry } = require('@polkadot/types');
+const { EXTRINSIC_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic');
 const { createSignedTx, createSigningPayload, decode, getRegistry, getTxHash, methods } = require('@substrate/txwrapper');
 const { createMetadata } = require('@substrate/txwrapper/lib/util/metadata');
+const DockTypes = require('./dock_types.json')
 
-const ssFormat = 42;
+const ss58Format = 42;
 const chainProperties = {
-    ss58Format: ssFormat,
+    ss58Format: ss58Format,
     tokenDecimals: 6,
     tokenSymbol: 'DCK',
 };
@@ -20,13 +23,35 @@ function getRegistryDock(chainName, specName, specVersion, metadata) {
     // then clear memory metadata = require(sdk,
     // and add new registry(along with metadata, it's a type, so small) to memory = require(code.
     createMetadata.clear();
-    registryDock[specVersion] = getRegistry(chainName, specName, specVersion, metadata);
+    // registryDock[specVersion] = getRegistry(chainName, specName, specVersion, metadata);
+
+
+    const registry = new TypeRegistry();
+    // const registry = getRegistry(chainName, specName, specVersion, metadata);
+    // registry.setKnownTypes({ types: DockTypes });
+    registry.setChainProperties(
+        registry.createType(
+            'ChainProperties',
+            chainProperties,
+        ),
+    );
+    const typs = {
+        Address: 'AccountId', LookupSource: 'AccountId', EpochNo: 'u32', SlotNo: 'u64', Balance: 'u64', Keys: 'SessionKeys2',
+        Did: "[u8;32]",
+        Registry: {
+            policy: 'Policy',
+            add_only: 'bool'
+        }
+    };
+    registry.register(typs);
+    registry.setMetadata(createMetadata(registry, metadata));
+    registryDock[specVersion] = registry;
 
     return registryDock[specVersion];
 }
 
 class Transaction {
-    constructor(network = ssFormat) {
+    constructor(network = ss58Format) {
         this.network = network
     }
 
@@ -49,19 +74,8 @@ class Transaction {
         } = txData;
 
         const registry = getRegistryDock(chainName, specName, specVersion, metadataRpc);
-        registry.register({ Address: 'AccountId' });
-        registry.register({ LookupSource: 'AccountId' });
-        registry.register({ EpochNo: 'u32' });
-        registry.register({ SlotNo: 'u64' });
-        registry.register({ Balance: 'u64' });
-        registry.setChainProperties(
-            registry.createType(
-                'ChainProperties',
-                chainProperties,
-            ),
-        );
 
-        const unsignedTx = methods.balances.transferKeepAlive({
+        const unsignedTx = methods.balances.transfer({
             value,
             dest,
         }, {
@@ -89,7 +103,7 @@ class Transaction {
         return this;
     }
 
-    sign(snData, privateKeys) {
+    async sign(snData, privateKeys) {
         const {
             chain_name: chainName,
             spec_name: specName,
@@ -105,19 +119,16 @@ class Transaction {
 
         // get keypair = require(privateKey
         const registry = getRegistryDock(chainName, specName, specVersion, metadata);
-        registry.setChainProperties(
-            registry.createType(
-                'ChainProperties',
-                chainProperties,
-            ),
-        );
 
-        const keyring = new Keyring();
+        await cryptoWaitReady();
+
+        const keyring = new Keyring({ type: 'sr25519' });
         keyring.setSS58Format(this.network);
         const seed = hexToU8a(privateKeys[0]);
         const keypair = keyring.addFromSeed(seed);
 
-        const { signature } = registry.createType('ExtrinsicPayload', signingPayload, { version: TRANSACTION_VERSION }).sign(keypair);
+        // registry.setMetadata(createMetadata(registry, metadata));
+        const { signature } = registry.createType('ExtrinsicPayload', signingPayload, { version: EXTRINSIC_VERSION }).sign(keypair);
 
         // raw_tx
         const serialized = createSignedTx(unsignedTxParse, signature, { metadataRpc: metadata, registry });
@@ -132,13 +143,6 @@ class Transaction {
         const { chainName, specName, specVersion, metadataRpc } = rpcData;
 
         const registry = getRegistryDock(chainName, specName, specVersion, metadataRpc);
-        // registry.register('EpochNo')
-        registry.setChainProperties(
-            registry.createType(
-                'ChainProperties',
-                chainProperties,
-            ),
-        );
 
         const tx = decode(signedRaw, { metadataRpc, registry });
 
