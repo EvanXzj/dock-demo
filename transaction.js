@@ -5,7 +5,7 @@ const { TypeRegistry } = require('@polkadot/types');
 const { EXTRINSIC_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic');
 const { createSignedTx, createSigningPayload, decode, getRegistry, getTxHash, methods } = require('@substrate/txwrapper');
 const { createMetadata } = require('@substrate/txwrapper/lib/util/metadata');
-const DockTypes = require('./dock_types.json')
+const DockTypes = require('./dock_types')
 
 const ss58Format = 42;
 const chainProperties = {
@@ -27,8 +27,7 @@ function getRegistryDock(chainName, specName, specVersion, metadata) {
 
 
     const registry = new TypeRegistry();
-    // const registry = getRegistry(chainName, specName, specVersion, metadata);
-    // registry.setKnownTypes({ types: DockTypes });
+    // It works without setting the properties as well
     registry.setChainProperties(
         registry.createType(
             'ChainProperties',
@@ -95,9 +94,9 @@ class Transaction {
         });
 
         // restore when hbSign
-        delete unsignedTx.metadataRpc;
+        // delete unsignedTx.metadataRpc;
 
-        this.unsignedTx = JSON.stringify(unsignedTx);
+        this.unsignedTx = unsignedTx;
         this.signingPayload = createSigningPayload(unsignedTx, { registry });
 
         return this;
@@ -113,9 +112,6 @@ class Transaction {
             metadata,
         } = snData;
 
-        // add since deleted = require(hbBuild
-        const unsignedTxParse = JSON.parse(unsignedTx);
-        unsignedTxParse.metadataRpc = metadata;
 
         // get keypair = require(privateKey
         const registry = getRegistryDock(chainName, specName, specVersion, metadata);
@@ -127,11 +123,10 @@ class Transaction {
         const seed = hexToU8a(privateKeys[0]);
         const keypair = keyring.addFromSeed(seed);
 
-        // registry.setMetadata(createMetadata(registry, metadata));
         const { signature } = registry.createType('ExtrinsicPayload', signingPayload, { version: EXTRINSIC_VERSION }).sign(keypair);
 
         // raw_tx
-        const serialized = createSignedTx(unsignedTxParse, signature, { metadataRpc: metadata, registry });
+        const serialized = createSignedTx(unsignedTx, signature, { metadataRpc: metadata, registry });
 
         this.serialized = serialized;
         this.txHash = getTxHash(serialized);

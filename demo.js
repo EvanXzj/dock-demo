@@ -7,9 +7,9 @@ const {diff} = require("deep-object-diff");
 const transaction = new Transaction();
 
 const GENESIS_HASH = '0xcee880310369cb2740cccc517adb4378b957b0b1e3c56b375ee29d82124a0c47';
-const BLOCK_HASH = '0x37e01face82cdd5bde90e4c7d9da0bdcae7dffd6e3eceb3388064b12f8bf2ce2';
-const BLOCK_NUMBER = 10285;
-const ERA_PERIOD = 64;
+const BLOCK_HASH = '0x0a710114434a1fffefe3aaea5cc522801fdc504d856a070cd13f8334b7ddde71';
+const BLOCK_NUMBER = 12370;
+const ERA_PERIOD = 128;
 
 const {privateKey, publicKey, address} = {
     privateKey: '0xdbc1eb1b2e1fe95a19719bd23eecd5e1e001cdf8ef7b93b59a2c8849ed08a00a',
@@ -19,7 +19,7 @@ const {privateKey, publicKey, address} = {
 
 const destAddress = '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL'
 const amount = 600;
-const nonce = 2;
+const nonce = 8;
 
 async function main() {
     const txData = {
