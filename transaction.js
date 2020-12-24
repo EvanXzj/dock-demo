@@ -3,16 +3,10 @@ const { cryptoWaitReady } = require('@polkadot/util-crypto');
 const { hexToU8a } = require('@polkadot/util');
 const { TypeRegistry } = require('@polkadot/types');
 const { EXTRINSIC_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic');
-const { createSignedTx, createSigningPayload, decode, getRegistry, getTxHash, methods } = require('@substrate/txwrapper');
+const { createSignedTx, createSigningPayload, decode, getTxHash, methods } = require('@substrate/txwrapper');
 const { createMetadata } = require('@substrate/txwrapper/lib/util/metadata');
-const DockTypes = require('./dock_types')
+const {ChainProperties, ss58Format} = require('./constants')
 
-const ss58Format = 42;
-const chainProperties = {
-    ss58Format: ss58Format,
-    tokenDecimals: 6,
-    tokenSymbol: 'DCK',
-};
 const registryDock = {};
 function getRegistryDock(chainName, specName, specVersion, metadata) {
     if (registryDock[specVersion]) {
@@ -23,15 +17,13 @@ function getRegistryDock(chainName, specName, specVersion, metadata) {
     // then clear memory metadata = require(sdk,
     // and add new registry(along with metadata, it's a type, so small) to memory = require(code.
     createMetadata.clear();
-    // registryDock[specVersion] = getRegistry(chainName, specName, specVersion, metadata);
-
 
     const registry = new TypeRegistry();
     // It works without setting the properties as well
     registry.setChainProperties(
         registry.createType(
             'ChainProperties',
-            chainProperties,
+            ChainProperties,
         ),
     );
     const typs = {

@@ -1,25 +1,27 @@
 const assert = require('assert')
 const Transaction = require('./transaction')
-const {metadataRpc} = require('./metadata.json')
+const {GENESIS_HASH, CHAIN_NAME, SPEC_NAME, SPEC_VERSION} = require('./constants')
+// const {metadataRpc} = require('./metadata.json')
+const {metadataRpc} = require('./mainnet_metadata.json')
 const {diff} = require("deep-object-diff");
 
+const BLOCK_HASH = '0x01b1f8381d9ee1b1714ff07afc3e9421d39120546f15441953ae5952c01f0cdb';
+const BLOCK_NUMBER = 2378965;
+const ERA_PERIOD = 128;
 
 const transaction = new Transaction();
 
-const GENESIS_HASH = '0xcee880310369cb2740cccc517adb4378b957b0b1e3c56b375ee29d82124a0c47';
-const BLOCK_HASH = '0x0a710114434a1fffefe3aaea5cc522801fdc504d856a070cd13f8334b7ddde71';
-const BLOCK_NUMBER = 12370;
-const ERA_PERIOD = 128;
-
 const {privateKey, publicKey, address} = {
-    privateKey: '0xdbc1eb1b2e1fe95a19719bd23eecd5e1e001cdf8ef7b93b59a2c8849ed08a00a',
+    // Enter your hex private key here
+    privateKey: '',
     publicKey: '',
-    address: '5DWfqRYDTq8JUtwgNZQ5wQf2GFp8FfNkJhk4D7jtgXQdSpLo',
+    // Enter your ss58 address here
+    address: '',
 }
 
-const destAddress = '5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL'
-const amount = 600;
-const nonce = 8;
+const destAddress = '3EUmSxQh6t7EvzFdxiNTWrDRqb8sDhrgugm4e5dZGutPXKuu'
+const amount = 505;
+const nonce = 0;
 
 async function main() {
     const txData = {
@@ -28,9 +30,9 @@ async function main() {
         block_hash: BLOCK_HASH,
         genesis_hash: GENESIS_HASH,
         transaction_version: 1,
-        chain_name: 'Dock Mainnet',
-        spec_name: 'dock-main-runtime',
-        spec_version: 16,
+        chain_name: CHAIN_NAME,
+        spec_name: SPEC_NAME,
+        spec_version: SPEC_VERSION,
         metadata: metadataRpc, // here put the metadata rather than compressed_metadata, because here result base from ksm-build
         from: address,
         to: destAddress,
@@ -117,7 +119,7 @@ async function main() {
     // console.log(txDeserialized);
     // Txn to broadcast with sidecar
     console.log(signedTx.serialized);
-    // console.log(diff(txDeserialized, expectResult));
+    console.log(diff(txDeserialized, expectResult));
     assert.deepStrictEqual(txDeserialized, expectResult, 'decode fn is not ok');
     console.log();
     console.log('Transaction.decode done');
