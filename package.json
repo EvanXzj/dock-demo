@@ -1,0 +1,28 @@
+{
+  "name": "dock-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvanXzj/dock-demo.git"
+  },
+  "keywords": [],
+  "author": "EvanXzj <2686465170@qq.com> (http://blog.chuidylan.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EvanXzj/dock-demo/issues"
+  },
+  "homepage": "https://github.com/EvanXzj/dock-demo#readme",
+  "dependencies": {
+    "@docknetwork/sdk": "0.3.10",
+    "@polkadot/api": "3.1.1",
+    "@polkadot/types": "3.1.1",
+    "@polkadot/util": "5.1.1",
+    "@polkadot/util-crypto": "5.1.1",
+    "@substrate/txwrapper": "3.10.4"
+  }
+}
