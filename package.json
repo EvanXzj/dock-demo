@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd node_modules/@substrate/txwrapper && npm run build && cd -"
   },
   "repository": {
     "type": "git",
@@ -19,13 +20,12 @@
   "homepage": "https://github.com/EvanXzj/dock-demo#readme",
   "dependencies": {
     "@polkadot/api": "3.1.1",
+    "@polkadot/keyring": "5.1.1",
     "@polkadot/types": "3.1.1",
     "@polkadot/util": "5.1.1",
     "@polkadot/util-crypto": "5.1.1",
-    "@substrate/txwrapper": "3.10.4",
-    "deep-object-diff": "^1.1.0"
-  },
-  "resolutions": {
-    "@polkadot/api": "3.1.1"
+    "@substrate/txwrapper": "github:paritytech/txwrapper#47968f6c05932f6a458677b64605e2384bfba099",
+    "deep-object-diff": "^1.1.0",
+    "rimraf": "^3.0.2"
   }
 }

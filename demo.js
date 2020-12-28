@@ -13,10 +13,10 @@ const transaction = new Transaction();
 
 const {privateKey, publicKey, address} = {
     // Enter your hex private key here
-    privateKey: '',
+    privateKey: '0xdbc1eb1b2e1fe95a19719bd23eecd5e1e001cdf8ef7b93b59a2c8849ed08a00a',
     publicKey: '',
     // Enter your ss58 address here
-    address: '',
+    address: '3FzQNQvzUvB7uU9qwSTDFZpLY8occHeFasiHRMmZi9HMvd5Z',
 }
 
 const destAddress = '3EUmSxQh6t7EvzFdxiNTWrDRqb8sDhrgugm4e5dZGutPXKuu'
