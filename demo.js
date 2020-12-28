@@ -1,3 +1,4 @@
+const { cryptoWaitReady } = require('@polkadot/util-crypto');
 const assert = require('assert')
 const Transaction = require('./transaction')
 const {GENESIS_HASH, CHAIN_NAME, SPEC_NAME, SPEC_VERSION} = require('./constants')
@@ -24,6 +25,7 @@ const amount = 505;
 const nonce = 0;
 
 async function main() {
+    await cryptoWaitReady();
     const txData = {
         era_period: ERA_PERIOD,
         block_number: BLOCK_NUMBER,

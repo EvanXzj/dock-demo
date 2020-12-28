@@ -24,7 +24,7 @@
     "@polkadot/types": "3.1.1",
     "@polkadot/util": "5.1.1",
     "@polkadot/util-crypto": "5.1.1",
-    "@substrate/txwrapper": "github:paritytech/txwrapper#47968f6c05932f6a458677b64605e2384bfba099",
+    "@substrate/txwrapper": "github:lovesh/txwrapper#with-npm",
     "deep-object-diff": "^1.1.0",
     "rimraf": "^3.0.2"
   }
