@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cd node_modules/@substrate/txwrapper && npm run build && cd -"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -24,8 +23,7 @@
     "@polkadot/types": "3.1.1",
     "@polkadot/util": "5.1.1",
     "@polkadot/util-crypto": "5.1.1",
-    "@substrate/txwrapper": "github:lovesh/txwrapper#with-npm",
-    "deep-object-diff": "^1.1.0",
-    "rimraf": "^3.0.2"
+    "@substrate/txwrapper": "3.10.5",
+    "deep-object-diff": "^1.1.0"
   }
 }

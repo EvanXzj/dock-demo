@@ -14,10 +14,10 @@ const transaction = new Transaction();
 
 const {privateKey, publicKey, address} = {
     // Enter your hex private key here
-    privateKey: '0xdbc1eb1b2e1fe95a19719bd23eecd5e1e001cdf8ef7b93b59a2c8849ed08a00a',
+    privateKey: '',
     publicKey: '',
     // Enter your ss58 address here
-    address: '3FzQNQvzUvB7uU9qwSTDFZpLY8occHeFasiHRMmZi9HMvd5Z',
+    address: '',
 }
 
 const destAddress = '3EUmSxQh6t7EvzFdxiNTWrDRqb8sDhrgugm4e5dZGutPXKuu'
@@ -121,7 +121,7 @@ async function main() {
     // console.log(txDeserialized);
     // Txn to broadcast with sidecar
     console.log(signedTx.serialized);
-    console.log(diff(txDeserialized, expectResult));
+    // console.log(diff(txDeserialized, expectResult));
     assert.deepStrictEqual(txDeserialized, expectResult, 'decode fn is not ok');
     console.log();
     console.log('Transaction.decode done');
