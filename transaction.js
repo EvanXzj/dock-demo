@@ -1,11 +1,19 @@
-const { Keyring } = require('@polkadot/api');
-const { cryptoWaitReady } = require('@polkadot/util-crypto');
-const { hexToU8a } = require('@polkadot/util');
-const { TypeRegistry } = require('@polkadot/types');
-const { EXTRINSIC_VERSION } = require('@polkadot/types/extrinsic/v4/Extrinsic');
-const { createSignedTx, createSigningPayload, decode, getTxHash, methods } = require('@substrate/txwrapper');
-const { createMetadata } = require('@substrate/txwrapper/lib/util/metadata');
-const {ChainProperties, ss58Format} = require('./constants')
+import { Keyring } from '@polkadot/api';
+import { getSpecTypes } from '@polkadot/types-known';
+import { cryptoWaitReady } from '@polkadot/util-crypto';
+import { hexToU8a } from '@polkadot/util';
+import { TypeRegistry } from '@polkadot/types';
+import { EXTRINSIC_VERSION } from '@polkadot/types/extrinsic/v4/Extrinsic';
+import { construct, decode, methods } from '@substrate/txwrapper-polkadot';
+import { createMetadata } from '@substrate/txwrapper-core'
+import { ChainProperties, ss58Format } from './constants.js';
+import dockTypes from './dock_types.json';
+
+const {
+    signedTx: createSignedTx,
+    txHash: getTxHash,
+    signingPayload:createSigningPayload
+} = construct;
 
 const registryDock = {};
 function getRegistryDock(chainName, specName, specVersion, metadata) {
@@ -13,35 +21,26 @@ function getRegistryDock(chainName, specName, specVersion, metadata) {
         return registryDock[specVersion];
     }
 
-    // when node upgrade, registry + metadata is new,
-    // then clear memory metadata = require(sdk,
-    // and add new registry(along with metadata, it's a type, so small) to memory = require(code.
     createMetadata.clear();
 
     const registry = new TypeRegistry();
-    // It works without setting the properties as well
     registry.setChainProperties(
         registry.createType(
             'ChainProperties',
             ChainProperties,
         ),
     );
-    const typs = {
-        Address: 'AccountId', LookupSource: 'AccountId', EpochNo: 'u32', SlotNo: 'u64', Balance: 'u64', Keys: 'SessionKeys2',
-        Did: "[u8;32]",
-        Registry: {
-            policy: 'Policy',
-            add_only: 'bool'
-        }
-    };
-    registry.register(typs);
+    registry.setKnownTypes({
+        dockTypes,
+    })
+    registry.register(getSpecTypes(registry, chainName, specName, specVersion));
     registry.setMetadata(createMetadata(registry, metadata));
     registryDock[specVersion] = registry;
 
     return registryDock[specVersion];
 }
 
-class Transaction {
+export default class Transaction {
     constructor(network = ss58Format) {
         this.network = network
     }
@@ -136,5 +135,3 @@ class Transaction {
         return tx;
     }
 }
-
-module.exports = Transaction

@@ -1,10 +1,10 @@
-const { cryptoWaitReady } = require('@polkadot/util-crypto');
-const assert = require('assert')
-const Transaction = require('./transaction')
-const {GENESIS_HASH, CHAIN_NAME, SPEC_NAME, SPEC_VERSION} = require('./constants')
-// const {metadataRpc} = require('./metadata.json')
-const {metadataRpc} = require('./mainnet_metadata.json')
-const {diff} = require("deep-object-diff");
+import { cryptoWaitReady } from '@polkadot/util-crypto';
+import Transaction from './transaction.js';
+import {GENESIS_HASH, CHAIN_NAME, SPEC_NAME, SPEC_VERSION} from './constants.js'
+
+import data from './mainnet_metadata.json'
+const metadataRpc = data.metadataRpc
+import {diff} from 'deep-object-diff'
 
 const BLOCK_HASH = '0x01b1f8381d9ee1b1714ff07afc3e9421d39120546f15441953ae5952c01f0cdb';
 const BLOCK_NUMBER = 2378965;
@@ -13,11 +13,9 @@ const ERA_PERIOD = 128;
 const transaction = new Transaction();
 
 const {privateKey, publicKey, address} = {
-    // Enter your hex private key here
-    privateKey: '',
-    publicKey: '',
-    // Enter your ss58 address here
-    address: '',
+    privateKey: '0xdbc1eb1b2e1fe95a19719bd23eecd5e1e001cdf8ef7b93b59a2c8849ed08a00a',
+    publicKey: '0xa25e012ea0578255ec6bf3b00795a22fefe40b08b5492b06a3620a3659beb6ed',
+    address: '3FzQNQvzUvB7uU9qwSTDFZpLY8occHeFasiHRMmZi9HMvd5Z',
 }
 
 const destAddress = '3EUmSxQh6t7EvzFdxiNTWrDRqb8sDhrgugm4e5dZGutPXKuu'
@@ -102,10 +100,11 @@ async function main() {
     // decode a serialized transaction
     // const txDeserialized = Transaction.decodeTx(signedRawTx, rpcData);
     const txDeserialized = Transaction.decodeTx(signedTx.serialized, rpcData);
+    delete txDeserialized.metadataRpc
     const expectResult = {
         address,
         eraPeriod: ERA_PERIOD,
-        metadataRpc,
+        // metadataRpc,
         method: {
             args: {
                 dest: destAddress,
@@ -121,8 +120,8 @@ async function main() {
     // console.log(txDeserialized);
     // Txn to broadcast with sidecar
     console.log(signedTx.serialized);
-    // console.log(diff(txDeserialized, expectResult));
-    assert.deepStrictEqual(txDeserialized, expectResult, 'decode fn is not ok');
+    console.log(diff(txDeserialized, expectResult));
+    // assert.deepStrictEqual(txDeserialized, expectResult, 'decode fn is not ok');
     console.log();
     console.log('Transaction.decode done');
 }

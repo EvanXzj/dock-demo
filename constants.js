@@ -1,4 +1,4 @@
-const ss58Format = 21;
+const ss58Format = 22;
 const ChainProperties = {
     ss58Format: ss58Format,
     tokenDecimals: 6,
@@ -8,9 +8,9 @@ const ChainProperties = {
 const GENESIS_HASH = '0xf73467c6544aa68df2ee546b135f955c46b90fa627e9b5d7935f41061bb8a5a9';
 const CHAIN_NAME = 'Dock Mainnet';
 const SPEC_NAME = 'dock-main-runtime';
-const SPEC_VERSION = 15;
+const SPEC_VERSION = 25;
 
-module.exports = {
+export {
     ss58Format,
     ChainProperties,
     GENESIS_HASH,
